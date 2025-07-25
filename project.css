@@ -12,7 +12,7 @@
     --menu-hover:#5fa9ae;
     --text:#fff;
   }
-
+  
   .sidebar{
     width:var(--sidebar-w);
     background:var(--bg);
@@ -26,13 +26,12 @@
     top:0;
     left:0;
   }
-
+  
   main{
     margin-left:var(--sidebar-w);
     padding:25px;
   }
 
- 
   .menu-item{
     display:flex;
     justify-content:space-between;
@@ -76,7 +75,7 @@
     list-style:none;
     padding:0;
     margin:0;
-    background:var(--submenu-bg);
+    /* background:var(--submenu-bg); */
     max-height:0;
     overflow:hidden;
     transition:max-height .25s ease;
@@ -90,6 +89,7 @@
     font-size:14px;
     cursor:pointer;
     transition:background .15s;
+    /* margin-left:-15px; */
   }
   .submenu li:hover{
     background:var(--hover);
@@ -101,10 +101,7 @@
     background-color:rgba(255,255,255,.3);
     border-radius:3px;
   }
-
-
-    /* Sidebar */
-    .sidebar {
+     .sidebar {
       width: 270px;
       background: #212529;
       color: white;
@@ -123,14 +120,14 @@
       transform: translateX(-100%);
     }
 
-    /* Menu Items */
+    
     .menu-item {
       padding: 12px 20px;
       cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      border-bottom: 1px solid #333;
+      
     }
 
     .menu-item-content {
@@ -173,7 +170,7 @@
       transform: rotate(180deg);
     }
 
-    /* Main Content */
+    
     main {
       margin-left: 270px;
       padding: 20px;
@@ -184,7 +181,7 @@
       margin-left: 0;
     }
 
-    /* Toggle Button */
+    
     .menu-toggle {
       position: fixed;
       top: 10px;
@@ -199,7 +196,7 @@
       border-radius: 4px;
     }
 
-    /* Responsive */
+   
     @media (max-width: 768px) {
       .sidebar {
         transform: translateX(-100%);
@@ -212,22 +209,117 @@
       }
     }
 
+ 
 
+     .sidebar {
+      width: 270px;
+      background: #212529;
+      color: white;
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 100vh;
+      overflow-y: auto;
+      padding-top: 0;
+      box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+      transform: translateX(-100%);
+      transition: transform 0.3s ease;
+    }
+    .sidebar.open {
+      transform: translateX(0);
+    }
+    .sidebar .header {
+      text-align: center;
+      background:#212529;
+      padding: 10px;
+    }
+    .sidebar .header img {
+      width: 100px;
+      width:30%
+    }
+    .menu-item {
+      padding: 12px 20px;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .menu-item:hover {
+      background: #343a40;
+    }
+    .menu-item-content {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .submenu {
+      display: none;
+      list-style: none;
+      padding-left: 30px;
+      margin: 0;
+      background: #2c3034;
+    }
+    .submenu.show {
+      display: block;
+    }
+    .submenu li {
+      padding: 8px 0;
+      cursor: pointer;
+    }
+    .submenu li:hover {
+      color: white;
+      background-color: #5fa9ae;
+    }
+    .arrow {
+      transition: transform 0.3s ease;
+    }
+    .arrow.rotate {
+      transform: rotate(180deg);
+    }
+    main#content {
+      margin-left: 270px;
+      padding: 20px;
+      transition: margin-left 0.3s ease;
+    }
+    .menu-toggle {
+      position: fixed;
+      top: 20px;
+      left: 20px;
+      z-index: 1000;
+      background: #212529;
+      color: white;
+      border: none;
+      padding: 10px;
+      cursor: pointer;
+      border-radius: 5px;
+       display: block;
+    
+    }
+    .sidebar {
+     left: -270px;  
+     transition: left 0.3s ease;
+     }
+     .sidebar.open {
+     left: 0;
+     }
 
+     /* .menu-item.active, */
+     .submenu li.active {
+      background: #5fa9ae; 
+      color: #fff !important;
+  
+      }
 
+     .menu-item.active .label,
+     .submenu li.active {
+     color: #fff !important;
+     }
 
-
-
-
-
-
-
-
-
-
-
-
-
+     @media (min-width: 992px) {  
+    .menu-toggle {
+    display: none;
+    }
+    }
 
 
 .table-container {
@@ -332,3 +424,5 @@ tr:hover {
 .logout-popup .btn-no:hover {
   background-color: #5a6268;
 }
+
+
