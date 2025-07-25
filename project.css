@@ -1,0 +1,206 @@
+  body {
+      margin: 0;
+      font-family: "Segoe UI", Arial, sans-serif;
+      background: #f4f4f4;
+    }
+
+  :root{
+    --sidebar-w:270px;
+    --bg:#212529;
+    --submenu-bg:#000;
+    --hover:#5fa9ae;
+    --menu-hover:#5fa9ae;
+    --text:#fff;
+  }
+
+  .sidebar{
+    width:var(--sidebar-w);
+    background:var(--bg);
+    color:var(--text);
+    height:100vh;
+    overflow-y:auto;
+    padding-top:10px;
+    box-shadow:2px 0 8px rgba(0,0,0,.2);
+    border-radius:20px;
+    position:fixed;
+    top:0;
+    left:0;
+  }
+
+  main{
+    margin-left:var(--sidebar-w);
+    padding:25px;
+  }
+
+ 
+  .menu-item{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;           
+    padding:14px 20px;
+    cursor:pointer;
+    font-size:16px;
+    font-weight:500;
+    transition:background .2s;
+  }
+  .menu-item:hover{
+    background:rgba(255,255,255,.04);
+  }
+  .menu-item-content{
+    display:flex;
+    align-items:center;          
+    gap:12px;                     
+    min-width:0;                 
+  }
+  .menu-item i{
+    font-size:18px;
+    width:20px;                 
+    text-align:center;
+    flex:0 0 20px;
+  }
+  .menu-item .label{
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+  }
+  .arrow{
+    font-size:12px;
+    transition:transform .25s;
+  }
+  .menu-item.open .arrow{
+    transform:rotate(90deg);
+  }
+
+ 
+  .submenu{
+    list-style:none;
+    padding:0;
+    margin:0;
+    background:var(--submenu-bg);
+    max-height:0;
+    overflow:hidden;
+    transition:max-height .25s ease;
+  }
+  .submenu.show{
+    max-height:500px;             
+  }
+  .submenu li{
+    padding:10px 35px;
+    border-bottom:1px solid rgba(255,255,255,.05);
+    font-size:14px;
+    cursor:pointer;
+    transition:background .15s;
+  }
+  .submenu li:hover{
+    background:var(--hover);
+  }
+
+  
+  .sidebar::-webkit-scrollbar{ width:6px; }
+  .sidebar::-webkit-scrollbar-thumb{
+    background-color:rgba(255,255,255,.3);
+    border-radius:3px;
+  }
+
+.table-container {
+  max-width: 90%;
+  margin: 20px auto;
+  overflow-x: auto;
+  overflow-y: auto;
+  max-height: 300px;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+  font-size: 12px;
+  table-layout: fixed;  
+}
+
+
+th {
+  background: #5fa9ae;
+  color: white;
+  text-align: center;
+  vertical-align: middle;
+  white-space: nowrap;
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  padding: 8px 10px;
+}
+
+td {
+  text-align: center;
+  vertical-align: middle;
+  padding: 8px 10px;
+  border-bottom: 1px solid #ddd;
+}
+
+tr:hover {
+  background: #f1f1f1;
+}
+.arrow {
+    font-size: 20px;   
+    margin-left: 5px;  
+    color: white;     
+}
+
+.logout-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.logout-popup {
+  background: #fff;
+  padding: 20px;
+  border-radius: 10px;
+  text-align: center;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+  width: 280px;
+}
+
+.logout-popup p {
+  margin-bottom: 15px;
+  font-size: 16px;
+  color: #333;
+}
+
+.logout-popup button {
+  padding: 8px 15px;
+  margin: 5px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.logout-popup .btn-yes {
+  background-color: green;
+  color: white;
+}
+
+.logout-popup .btn-yes:hover {
+  background-color: #5a6268;
+}
+
+.logout-popup .btn-no {
+  background-color:red;
+  color:white;
+}
+
+.logout-popup .btn-no:hover {
+  background-color: #5a6268;
+}
