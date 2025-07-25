@@ -16,156 +16,151 @@
 <body>
   <div class="sidebar" id="sidebar"></div>
   <main id="content"></main>
-  
+
+  <button id="menu-toggle" class="menu-toggle">
+    <i class="fa-solid fa-bars"></i>
+  </button>
+
   <script>
-    
-  
+    const menu = [
+      { title: "Appointments",           icon: "fa-calendar",     submenu: ["New Appointment", "Reschedule Appointment", "Cancel Appointment"] },
+      { title: "Hospitalization",        icon: "fa-hospital",     submenu: ["Admitted"] },
+      { title: "Medication Enquiries",   icon: "fa-pills",        submenu: ["Medication Enquiries"] },
+      { title: "Department Enquiries",   icon: "fa-building",     submenu: ["Avian and Exotics", "Cardiology", "Internal Medicine", "Outpatient Imaging (MRI/CT/Ultrasound scan etc.)", "Neurology", "Surgery", "Veterinary Rehabilitation & Hydrotherapy"] },
+      { title: "Request a Callback",     icon: "fa-phone",        submenu: ["Request a Callback"] },
+      { title: "Pay Deposit",            icon: "fa-credit-card",  submenu: ["Payment Deposit Enquiries", "Refund Enquiries", "Billing Enquiries"] },
+      { title: "Users",                  icon: "fa-users",        submenu: [] }, 
+      { title: "Log Out",                icon: "fa-right-from-bracket", submenu: [] }
+    ];
 
-    
-  const menu = [
-  { title: "Appointments",           icon: "fa-calendar",     submenu: ["New Appointment", "Reschedule Appointment", "Cancel Appointment"] },
-  { title: "Hospitalization",        icon: "fa-hospital",     submenu: ["Admitted"] },
-  { title: "Medication Enquiries",   icon: "fa-pills",        submenu: ["Medication Enquiries"] },
-  { title: "Department Enquiries",   icon: "fa-building",     submenu: ["Avian and Exotics", "Cardiology", "Internal Medicine", "Outpatient Imaging (MRI/CT/Ultrasound scan etc.)", "Neurology", "Surgery", "Veterinary Rehabilitation & Hydrotherapy"] },
-  { title: "Request a Callback",     icon: "fa-phone",        submenu: ["Request a Callback"] },
-  { title: "Pay Deposit",            icon: "fa-credit-card",  submenu: ["Payment Deposit Enquiries", "Refund Enquiries", "Billing Enquiries"] },
-  { title: "Users",                  icon: "fa-users",        submenu: [] }, 
-  { title: "Log Out",                icon: "fa-right-from-bracket", submenu: [] }
-];
+    const sidebar = document.getElementById('sidebar');
+    const content = document.getElementById('content');
+    const toggleBtn = document.getElementById('menu-toggle');
 
-const sidebar = document.getElementById('sidebar');
-const content = document.getElementById('content');
-
-menu.forEach(item => {
-  const hasSubmenu = item.submenu && item.submenu.length > 0 && item.title !== "Users";
-  const menuItem = document.createElement("div");
-  menuItem.classList.add("menu-item");
-  const contentDiv = document.createElement("div");
-  contentDiv.classList.add("menu-item-content");
-  contentDiv.innerHTML = `
-    <i class="fa-solid ${item.icon}"></i>
-    <span class="label">${item.title}</span>
-  `;
-  menuItem.appendChild(contentDiv);
-  let arrow = null;
-  if (hasSubmenu) {
-    arrow = document.createElement("span");
-    arrow.classList.add("arrow");
-    arrow.innerHTML = "&#9662;"; 
-    menuItem.appendChild(arrow);
-  }
-  sidebar.appendChild(menuItem);
-
-  if (item.title === "Users") {
-    menuItem.addEventListener("click", () => {
-      content.innerHTML = Users();
-      setTimeout(() => $('#UsersTable').DataTable(), 0);
-    });
-    return;
-  }
-if (item.title === "Log Out") {
-  menuItem.addEventListener("click", () => {
-    showLogoutPopup();
-  });
-  return;
-}
-
-
-  if (hasSubmenu) {
-    const submenu = document.createElement("ul");
-    submenu.classList.add("submenu");
-
-    item.submenu.forEach(sub => {
-      const li = document.createElement("li");
-      li.textContent = sub;
-
-      li.addEventListener("click", (e) => {
-        e.stopPropagation();
-        
-        if (sub === "New Appointment") {
-          content.innerHTML = NewAppointment();
-          setTimeout(() => $('#newappointmentTable').DataTable(), 0);
-        }
-        else if (sub === "Reschedule Appointment") {
-          content.innerHTML = RescheduleAppointment();
-          setTimeout(() => $('#rescheduleappointmentTable').DataTable(), 0);
-        }
-        else if (sub === "Cancel Appointment") {
-          content.innerHTML = CancelAppointment();
-          setTimeout(() => $('#cancelappointmentTable').DataTable(), 0);
-        }
-        else if (sub === "Admitted") {
-          content.innerHTML = Admitted();
-          setTimeout(() => $('#AdmittedTable').DataTable(), 0);
-        }
-        else if (sub === "Medication Enquiries") {
-          content.innerHTML = MedicationEnquiries();
-          setTimeout(() => $('#MedicationEnquiriesTable').DataTable(), 0);
-        }
-        else if (sub === "Avian and Exotics") {
-          content.innerHTML = AvianandExotics();
-          setTimeout(() => $('#AvianandExoticsTable').DataTable(), 0);
-        }
-        else if (sub === "Cardiology") {
-          content.innerHTML = Cardiology();
-          setTimeout(() => $('#CardiologyTable').DataTable(), 0);
-        }
-        else if (sub === "Internal Medicine") {
-          content.innerHTML = InternalMedicine();
-          setTimeout(() => $('#InternalMedicineTable').DataTable(), 0);
-        }
-        else if (item.title === "Department Enquiries" && sub === "Outpatient Imaging (MRI/CT/Ultrasound scan etc.)") {
-          content.innerHTML = OutpatientImaging();
-          setTimeout(() => $('#OutpatientImagingTable').DataTable(), 0);
-        }
-        else if (sub === "Neurology") {
-          content.innerHTML = Neurology();
-          setTimeout(() => $('#NeurologyTable').DataTable(), 0);
-        }
-        else if (sub === "Surgery") {
-          content.innerHTML = Surgery();
-          setTimeout(() => $('#SurgeryTable').DataTable(), 0);
-        }
-        else if (sub === "Veterinary Rehabilitation & Hydrotherapy") {
-          content.innerHTML = VeterinaryRehabilitationHydrotherapy();
-          setTimeout(() => $('#VeterinaryRehabilitationHydrotherapyTable').DataTable(), 0);
-        }
-        else if (sub === "Request a Callback") {
-          content.innerHTML = RequestaCallback();
-          setTimeout(() => $('#RequestaCallbackTable').DataTable(), 0);
-        }
-        else if (sub === "Payment Deposit Enquiries") {
-          content.innerHTML = PaymentDepositEnquiries();
-          setTimeout(() => $('#PaymentDepositEnquiriesTable').DataTable(), 0);
-        }
-        else if (sub === "Refund Enquiries") {
-          content.innerHTML = RefundEnquiries();
-          setTimeout(() => $('#RefundEnquiriesTable').DataTable(), 0);
-        }
-        else if (sub === "Billing Enquiries") {
-          content.innerHTML = BillingEnquiries();
-          setTimeout(() => $('#BillingEnquiriesTable').DataTable(), 0);
-        }
-        else {
-          content.innerHTML =`<h1>${item.title}</h1><p>You selected <b>${sub}</b></p>`;
-        }
-      });
-
-      submenu.appendChild(li);
+    // Toggle sidebar visibility
+    toggleBtn.addEventListener('click', () => {
+      sidebar.classList.toggle('open');
     });
 
-      sidebar.appendChild(submenu);
-      menuItem.addEventListener("click", () => {
-      const isVisible = submenu.classList.contains("show");
-      document.querySelectorAll(".submenu").forEach(sm => sm.classList.remove("show"));
-      document.querySelectorAll(".arrow").forEach(a => a.classList.remove("rotate"));
-      if (!isVisible) {
-        submenu.classList.add("show");
-        if (arrow) arrow.classList.add("rotate");
+    // Render menu
+    menu.forEach(item => {
+      const hasSubmenu = item.submenu && item.submenu.length > 0 && item.title !== "Users";
+      const menuItem = document.createElement("div");
+      menuItem.classList.add("menu-item");
+
+      const contentDiv = document.createElement("div");
+      contentDiv.classList.add("menu-item-content");
+      contentDiv.innerHTML = `
+        <i class="fa-solid ${item.icon}"></i>
+        <span class="label">${item.title}</span>
+      `;
+      menuItem.appendChild(contentDiv);
+
+      let arrow = null;
+      if (hasSubmenu) {
+        arrow = document.createElement("span");
+        arrow.classList.add("arrow");
+        arrow.innerHTML = "&#9662;"; 
+        menuItem.appendChild(arrow);
+      }
+      sidebar.appendChild(menuItem);
+
+      if (item.title === "Users") {
+        menuItem.addEventListener("click", () => {
+          content.innerHTML = Users();
+          setTimeout(() => $('#UsersTable').DataTable(), 0);
+        });
+        return;
+      }
+      if (item.title === "Log Out") {
+        menuItem.addEventListener("click", () => {
+          showLogoutPopup();
+        });
+        return;
+      }
+
+      if (hasSubmenu) {
+        const submenu = document.createElement("ul");
+        submenu.classList.add("submenu");
+
+        item.submenu.forEach(sub => {
+          const li = document.createElement("li");
+          li.textContent = sub;
+
+          li.addEventListener("click", (e) => {
+            e.stopPropagation();
+            sidebar.classList.remove('open'); // Close sidebar on selection (for mobile)
+
+            if (sub === "New Appointment") {
+              content.innerHTML = NewAppointment();
+              setTimeout(() => $('#newappointmentTable').DataTable(), 0);
+            } else if (sub === "Reschedule Appointment") {
+              content.innerHTML = RescheduleAppointment();
+              setTimeout(() => $('#rescheduleappointmentTable').DataTable(), 0);
+            } else if (sub === "Cancel Appointment") {
+              content.innerHTML = CancelAppointment();
+              setTimeout(() => $('#cancelappointmentTable').DataTable(), 0);
+            } else if (sub === "Admitted") {
+              content.innerHTML = Admitted();
+              setTimeout(() => $('#AdmittedTable').DataTable(), 0);
+            } else if (sub === "Medication Enquiries") {
+              content.innerHTML = MedicationEnquiries();
+              setTimeout(() => $('#MedicationEnquiriesTable').DataTable(), 0);
+            } else if (sub === "Avian and Exotics") {
+              content.innerHTML = AvianandExotics();
+              setTimeout(() => $('#AvianandExoticsTable').DataTable(), 0);
+            } else if (sub === "Cardiology") {
+              content.innerHTML = Cardiology();
+              setTimeout(() => $('#CardiologyTable').DataTable(), 0);
+            } else if (sub === "Internal Medicine") {
+              content.innerHTML = InternalMedicine();
+              setTimeout(() => $('#InternalMedicineTable').DataTable(), 0);
+            } else if (item.title === "Department Enquiries" && sub === "Outpatient Imaging (MRI/CT/Ultrasound scan etc.)") {
+              content.innerHTML = OutpatientImaging();
+              setTimeout(() => $('#OutpatientImagingTable').DataTable(), 0);
+            } else if (sub === "Neurology") {
+              content.innerHTML = Neurology();
+              setTimeout(() => $('#NeurologyTable').DataTable(), 0);
+            } else if (sub === "Surgery") {
+              content.innerHTML = Surgery();
+              setTimeout(() => $('#SurgeryTable').DataTable(), 0);
+            } else if (sub === "Veterinary Rehabilitation & Hydrotherapy") {
+              content.innerHTML = VeterinaryRehabilitationHydrotherapy();
+              setTimeout(() => $('#VeterinaryRehabilitationHydrotherapyTable').DataTable(), 0);
+            } else if (sub === "Request a Callback") {
+              content.innerHTML = RequestaCallback();
+              setTimeout(() => $('#RequestaCallbackTable').DataTable(), 0);
+            } else if (sub === "Payment Deposit Enquiries") {
+              content.innerHTML = PaymentDepositEnquiries();
+              setTimeout(() => $('#PaymentDepositEnquiriesTable').DataTable(), 0);
+            } else if (sub === "Refund Enquiries") {
+              content.innerHTML = RefundEnquiries();
+              setTimeout(() => $('#RefundEnquiriesTable').DataTable(), 0);
+            } else if (sub === "Billing Enquiries") {
+              content.innerHTML = BillingEnquiries();
+              setTimeout(() => $('#BillingEnquiriesTable').DataTable(), 0);
+            } else {
+              content.innerHTML = `<h1>${item.title}</h1><p>You selected <b>${sub}</b></p>`;
+            }
+          });
+
+          submenu.appendChild(li);
+        });
+
+        sidebar.appendChild(submenu);
+        menuItem.addEventListener("click", () => {
+          const isVisible = submenu.classList.contains("show");
+          document.querySelectorAll(".submenu").forEach(sm => sm.classList.remove("show"));
+          document.querySelectorAll(".arrow").forEach(a => a.classList.remove("rotate"));
+          if (!isVisible) {
+            submenu.classList.add("show");
+            if (arrow) arrow.classList.add("rotate");
+          }
+        });
       }
     });
-  }
-});
+  
+
 
         //  New Appointment
         function NewAppointment() {
