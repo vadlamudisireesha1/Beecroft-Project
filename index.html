@@ -1,28 +1,28 @@
 <!DOCTYPE html>
 <html lang="en">
 
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
-    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
-    <link rel="stylesheet" href="project.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+  <link rel="stylesheet" href="project.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 
 <body>
-
-    <div class="sidebar open" id="sidebar">
-    <div class="header ">
+  <div class="sidebar open" id="sidebar">
+    <div class="header">
       <a title="Beecroft" target="_blank" href="https://beecroft.com.sg/">
         <img src="https://beecroft.com.sg/wp-content/uploads/2024/11/site-logo.svg" alt="BeeCroft Logo">
       </a>
     </div>
   </div>
+
   <div class="sidebar" id="sidebar"></div>
   <main id="content"></main>
 
@@ -31,27 +31,29 @@
   </button>
 
   <script>
+
+
     const menu = [
-      { title: "Appointments",           icon: "fa-calendar",     submenu: ["New Appointment", "Reschedule Appointment", "Cancel Appointment"] },
-      { title: "Hospitalization",        icon: "fa-hospital",     submenu: ["Admitted"] },
-      { title: "Medication Enquiries",   icon: "fa-pills",        submenu: ["Medication Enquiries"] },
-      { title: "Department Enquiries",   icon: "fa-building",     submenu: ["Avian and Exotics", "Cardiology", "Internal Medicine", "Outpatient Imaging (MRI/CT/Ultrasound scan etc.)", "Neurology", "Surgery", "Veterinary Rehabilitation & Hydrotherapy"] },
-      { title: "Request a Callback",     icon: "fa-phone",        submenu: ["Request a Callback"] },
-      { title: "Pay Deposit",            icon: "fa-credit-card",  submenu: ["Payment Deposit Enquiries", "Refund Enquiries", "Billing Enquiries"] },
-      { title: "Users",                  icon: "fa-users",        submenu: [] }, 
-      { title: "Log Out",                icon: "fa-right-from-bracket", submenu: [] }
+      { title: "Appointments", icon: "fa-calendar", submenu: ["New Appointment", "Reschedule Appointment", "Cancel Appointment"] },
+      { title: "Hospitalization", icon: "fa-hospital", submenu: ["Admitted"] },
+      { title: "Medication Enquiries", icon: "fa-pills", submenu: ["Medication Enquiries"] },
+      { title: "Department Enquiries", icon: "fa-building", submenu: ["Avian and Exotics", "Cardiology", "Internal Medicine", "Outpatient Imaging (MRI/CT/Ultrasound scan etc.)", "Neurology", "Surgery", "Veterinary Rehabilitation & Hydrotherapy"] },
+      { title: "Request a Callback", icon: "fa-phone", submenu: ["Request a Callback"] },
+      { title: "Pay Deposit", icon: "fa-credit-card", submenu: ["Payment Deposit Enquiries", "Refund Enquiries", "Billing Enquiries"] },
+      { title: "Users", icon: "fa-users", submenu: [] },
+      { title: "Log Out", icon: "fa-right-from-bracket", submenu: [] }
     ];
 
     const sidebar = document.getElementById('sidebar');
     const content = document.getElementById('content');
     const toggleBtn = document.getElementById('menu-toggle');
 
-    
+
     toggleBtn.addEventListener('click', () => {
       sidebar.classList.toggle('open');
     });
 
- 
+
     menu.forEach(item => {
       const hasSubmenu = item.submenu && item.submenu.length > 0 && item.title !== "Users";
       const menuItem = document.createElement("div");
@@ -68,18 +70,22 @@
       if (hasSubmenu) {
         arrow = document.createElement("span");
         arrow.classList.add("arrow");
-        arrow.innerHTML = "&#9662;"; 
+        arrow.innerHTML = "&#9662;";
         menuItem.appendChild(arrow);
       }
       sidebar.appendChild(menuItem);
 
       if (item.title === "Users") {
-        menuItem.addEventListener("click", () => {
+        menuItem.addEventListener("click", (e) => {
+          e.stopPropagation();
+          closeAllSubmenus();
+          setActiveMenu(menuItem);
           content.innerHTML = Users();
           setTimeout(() => $('#UsersTable').DataTable(), 0);
         });
         return;
       }
+
       if (item.title === "Log Out") {
         menuItem.addEventListener("click", () => {
           showLogoutPopup();
@@ -95,59 +101,143 @@
           const li = document.createElement("li");
           li.textContent = sub;
 
-            li.addEventListener("click", (e) => {
+          li.addEventListener("click", (e) => {
             e.stopPropagation();
-            sidebar.classList.add('open'); 
+            if (window.innerWidth <= 768) {
+              sidebar.classList.remove('open');
+            }
+            // sidebar.classList.add('open');
             setActiveMenu(menuItem, li);
-         
-              if (sub === "New Appointment") {
+
+
+            if (sub === "New Appointment") {
               content.innerHTML = NewAppointment();
-              setTimeout(() => $('#newappointmentTable').DataTable(), 0);
+              setTimeout(() => {
+                $('#newappointmentTable').DataTable({
+                  scrollX: true,
+                  autoWidth: false
+                });
+              }, 0);
             } else if (sub === "Reschedule Appointment") {
               content.innerHTML = RescheduleAppointment();
-              setTimeout(() => $('#rescheduleappointmentTable').DataTable(), 0);
+              setTimeout(() => {
+                $('#rescheduleappointmentTable').DataTable({
+                  scrollX: true,
+                  autoWidth: false
+                });
+              }, 0);
             } else if (sub === "Cancel Appointment") {
               content.innerHTML = CancelAppointment();
-              setTimeout(() => $('#cancelappointmentTable').DataTable(), 0);
+              setTimeout(() => {
+                $('#cancelappointmentTable').DataTable({
+                  scrollX: true,
+                  autoWidth: false
+                });
+              }, 0);
             } else if (sub === "Admitted") {
               content.innerHTML = Admitted();
-              setTimeout(() => $('#AdmittedTable').DataTable(), 0);
+              setTimeout(() => {
+                $('#AdmittedTable').DataTable({
+                  scrollX: true,
+                  autoWidth: false
+                });
+              }, 0);
             } else if (sub === "Medication Enquiries") {
               content.innerHTML = MedicationEnquiries();
-              setTimeout(() => $('#MedicationEnquiriesTable').DataTable(), 0);
+              setTimeout(() => {
+                $('#MedicationEnquiriesTable').DataTable({
+                  scrollX: true,
+                  autoWidth: false
+                });
+              }, 0);
             } else if (sub === "Avian and Exotics") {
               content.innerHTML = AvianandExotics();
-              setTimeout(() => $('#AvianandExoticsTable').DataTable(), 0);
+              setTimeout(() => {
+                $('#AvianandExoticsTable').DataTable({
+                  scrollX: true,
+                  autoWidth: false
+                });
+              }, 0);
             } else if (sub === "Cardiology") {
               content.innerHTML = Cardiology();
-              setTimeout(() => $('#CardiologyTable').DataTable(), 0);
+              setTimeout(() => {
+                $('#CardiologyTable').DataTable({
+                  scrollX: true,
+                  autoWidth: false
+                });
+              }, 0);
             } else if (sub === "Internal Medicine") {
               content.innerHTML = InternalMedicine();
-              setTimeout(() => $('#InternalMedicineTable').DataTable(), 0);
+              setTimeout(() => {
+                $('#InternalMedicineTable').DataTable({
+                  scrollX: true,
+                  autoWidth: false
+                });
+              }, 0);
             } else if (item.title === "Department Enquiries" && sub === "Outpatient Imaging (MRI/CT/Ultrasound scan etc.)") {
               content.innerHTML = OutpatientImaging();
-              setTimeout(() => $('#OutpatientImagingTable').DataTable(), 0);
+              setTimeout(() => {
+                $('#OutpatientImagingTable').DataTable({
+                  scrollX: true,
+                  autoWidth: false
+                });
+              }, 0);
             } else if (sub === "Neurology") {
               content.innerHTML = Neurology();
-              setTimeout(() => $('#NeurologyTable').DataTable(), 0);
+              setTimeout(() => {
+                $('#NeurologyTable').DataTable({
+                  scrollX: true,
+                  autoWidth: false
+                });
+              }, 0);
             } else if (sub === "Surgery") {
               content.innerHTML = Surgery();
-              setTimeout(() => $('#SurgeryTable').DataTable(), 0);
+              setTimeout(() => {
+                $('#SurgeryTable').DataTable({
+                  scrollX: true,
+                  autoWidth: false
+                });
+              }, 0);
             } else if (sub === "Veterinary Rehabilitation & Hydrotherapy") {
               content.innerHTML = VeterinaryRehabilitationHydrotherapy();
-              setTimeout(() => $('#VeterinaryRehabilitationHydrotherapyTable').DataTable(), 0);
+              setTimeout(() => {
+                $('#VeterinaryRehabilitationHydrotherapyTable').DataTable({
+                  scrollX: true,
+                  autoWidth: false
+                });
+              }, 0);
             } else if (sub === "Request a Callback") {
               content.innerHTML = RequestaCallback();
-              setTimeout(() => $('#RequestaCallbackTable').DataTable(), 0);
+              setTimeout(() => {
+                $('#RequestaCallbackTable').DataTable({
+                  scrollX: true,
+                  autoWidth: false
+                });
+              }, 0);
             } else if (sub === "Payment Deposit Enquiries") {
               content.innerHTML = PaymentDepositEnquiries();
-              setTimeout(() => $('#PaymentDepositEnquiriesTable').DataTable(), 0);
+              setTimeout(() => {
+                $('#PaymentDepositEnquiriesTable').DataTable({
+                  scrollX: true,
+                  autoWidth: false
+                });
+              }, 0);
             } else if (sub === "Refund Enquiries") {
               content.innerHTML = RefundEnquiries();
-              setTimeout(() => $('#RefundEnquiriesTable').DataTable(), 0);
+              setTimeout(() => {
+                $('#RefundEnquiriesTable').DataTable({
+                  scrollX: true,
+                  autoWidth: false
+                });
+              }, 0);
             } else if (sub === "Billing Enquiries") {
               content.innerHTML = BillingEnquiries();
-              setTimeout(() => $('#BillingEnquiriesTable').DataTable(), 0);
+              setTimeout(() => {
+                $('#BillingEnquiriesTable').DataTable({
+                  scrollX: true,
+                  autoWidth: false
+                });
+              }, 0);
             } else {
               content.innerHTML = `<h1>${item.title}</h1><p>You selected <b>${sub}</b></p>`;
             }
@@ -168,66 +258,75 @@
         });
       }
     });
-  function setActiveMenu(menuItem, subItem = null) {
-  document.querySelectorAll(".menu-item, .submenu li").forEach(el => el.classList.remove("active"));
-  menuItem.classList.add("active");
-  if (subItem) subItem.classList.add("active");
-   }
+    function setActiveMenu(menuItem, subItem = null) {
+      document.querySelectorAll(".menu-item, .submenu li").forEach(el => el.classList.remove("active"));
+      menuItem.classList.add("active");
+      if (subItem) subItem.classList.add("active");
+    }
+    function closeAllSubmenus() {
+      document.querySelectorAll(".submenu").forEach(sm => sm.classList.remove("show"));
+      document.querySelectorAll(".arrow").forEach(a => a.classList.remove("rotate"));
+      document.querySelectorAll(".menu-item, .submenu li").forEach(el => el.classList.remove("active"));
+    }
 
-  
 
 
-        //  New Appointment
-        function NewAppointment() {
-            return `
+    //  New Appointment
+    function NewAppointment() {
+      return `
         <div>
-          <h2>New Appointment</h2>
-          <table id="newappointmentTable" class="display">
-            <thead>
-              <tr>
-                <th>Species</th>
-                <th>Pet Name</th>
-                <th>Pet Owner Name</th>
-                <th>Phone Number</th>
-                <th>Primary Veterinary</th>
-                <th>Departments</th>
-                <th>Preferred Time Slot</th>
-                <th>Brief Description</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>Dog</td>
-                <td>Max</td>
-                <td>Alice</td>
-                <td>9876543210</td>
-                <td>Dr. John</td>
-                <td>Surgery</td>
-                <td>10:00 - 11:00</td>
-                <td>Annual checkup</td>
-              </tr>
-              <tr>
-                <td>Cat</td>
-                <td>Kitty</td>
-                <td>Bob</td>
-                <td>9876501234</td>
-                <td>Dr. Mary</td>
-                <td>Cardiology</td>
-                <td>11:00 - 12:00</td>
-                <td>Heart issue</td>
-              </tr>
-            </tbody>
-          </table>
+          <h2 class="page-title">New Appointment</h2>
+          <div class="table-container">
+          <table id="newappointmentTable" class="display nowrap">
+          <thead>
+      <tr>
+        <th>Species</th>
+        <th>Pet Name</th>
+        <th>Pet Owner Name</th>
+        <th>Phone Number</th>
+        <th>Primary Veterinary</th>
+        <th>Departments</th>
+        <th>Preferred Time Slot</th>
+        <th>Brief Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Dog</td>
+        <td>Max</td>
+        <td>Alice</td>
+        <td>9876543210</td>
+        <td>Dr. John</td>
+        <td>Surgery</td>
+        <td>10:00 - 11:00</td>
+        <td>Annual checkup</td>
+      </tr>
+      <tr>
+        <td>Cat</td>
+        <td>Kitty</td>
+        <td>Bob</td>
+        <td>9876501234</td>
+        <td>Dr. Mary</td>
+        <td>Cardiology</td>
+        <td>11:00 - 12:00</td>
+        <td>Heart issue</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+       
         </div>
       `;
-        }
+    }
 
-        // Reschedule Appointment
-        function RescheduleAppointment() {
-            return `
+    // Reschedule Appointment
+    function RescheduleAppointment() {
+      return `
         <div>
-          <h2>Reschedule Appointment</h2>
-          <table id="rescheduleappointmentTable" class="display">
+          <h2 class="page-title">Reschedule Appointment</h2>
+           <div class="table-container">
+          <table id="rescheduleappointmentTable" class="display nowrap">
             <thead>
               <tr>
                 <th>Registered Pet Name</th>
@@ -260,16 +359,18 @@
               </tr>
             </tbody>
           </table>
+          </div>
         </div>
       `;
-        }
+    }
 
-        //  Cancel Appointment
-        function CancelAppointment() {
-            return `
+    //  Cancel Appointment
+    function CancelAppointment() {
+      return `
         <div>
-          <h2>Cancel Appointment</h2>
-          <table id="cancelappointmentTable" class="display">
+          <h2 class="page-title">Cancel Appointment</h2>
+          <div class="table-container">
+          <table id="cancelappointmentTable" class="display nowrap">
             <thead>
               <tr>
                 <th>Registered Pet Name</th>
@@ -296,16 +397,18 @@
               </tr>
             </tbody>
           </table>
+          </div>
         </div>
       `;
-        }
+    }
 
-        // Admitted
-        function Admitted() {
-            return `
+    // Admitted
+    function Admitted() {
+      return `
         <div>
-          <h2>Admitted</h2>
-          <table id="AdmittedTable" class="display">
+          <h2 class="page-title">Admitted</h2>
+          <div class="table-container">
+          <table id="AdmittedTable" class="display  nowrap">
             <thead>
               <tr>
                 <th>Registered Pet Name</th>
@@ -329,16 +432,18 @@
               </tr>
             </tbody>
           </table>
+          </div>
         </div>
       `;
-        }
+    }
 
-        //Medication Enquiries
-        function MedicationEnquiries() {
-            return `
+    //Medication Enquiries
+    function MedicationEnquiries() {
+      return `
         <div>
-          <h2>Medication Enquiries</h2>
-          <table id="MedicationEnquiriesTable" class="display">
+          <h2 class="page-title">Medication Enquiries</h2>
+          <div class="table-container">
+          <table id="MedicationEnquiriesTable" class="display  nowrap">
             <thead>
               <tr>
                 <th>Pet Name</th>
@@ -368,16 +473,18 @@
              </tr>
             </tbody>
           </table>
+          </div>
         </div>
       `;
-        }
+    }
 
-        //Avian and Exotics
-         function AvianandExotics() {
-            return `
+    //Avian and Exotics
+    function AvianandExotics() {
+      return `
         <div>
-          <h2>Avian and Exotics</h2>
-          <table id="AvianandExoticsTable" class="display">
+          <h2 class="page-title">Avian and Exotics</h2>
+          <div class="table-container">
+          <table id="AvianandExoticsTable" class="display  nowrap">
             <thead>
               <tr>
                 <th>Pet Name</th>
@@ -407,16 +514,18 @@
              </tr>
             </tbody>
           </table>
+          </div>
         </div>
       `;
-        }
+    }
 
-        //Cardiology
-         function Cardiology() {
-            return `
+    //Cardiology
+    function Cardiology() {
+      return `
         <div>
-          <h2>Cardiology</h2>
-          <table id="CardiologyTable" class="display">
+          <h2 class="page-title">Cardiology</h2>
+          <div class="table-container">
+          <table id="CardiologyTable" class="display  nowrap">
             <thead>
               <tr>
                 <th>Pet Name</th>
@@ -445,16 +554,18 @@
             <td>Kiwi,injured its wing last week</td>
             </tbody>
           </table>
+          </div>
         </div>
       `;
-        }
+    }
 
-        //Internal Medicine
-         function InternalMedicine() {
-            return `
+    //Internal Medicine
+    function InternalMedicine() {
+      return `
         <div>
-          <h2>InternalMedicine</h2>
-          <table id="InternalMedicineTable" class="display">
+          <h2 class="page-title">InternalMedicine</h2>
+          <div class="table-container">
+          <table id="InternalMedicineTable" class="display  nowrap">
             <thead>
               <tr>
                 <th>Pet Name</th>
@@ -475,16 +586,18 @@
            </tr>
             </tbody>
           </table>
+          </div>
         </div>
       `;
-        }
-        
-        // Outpatient Imaging (MRI/CT/Ultrasound scan etc.)
-         function  OutpatientImaging() {
-            return `
+    }
+
+    // Outpatient Imaging (MRI/CT/Ultrasound scan etc.)
+    function OutpatientImaging() {
+      return `
         <div>
-          <h2> Outpatient Imaging (MRI/CT/Ultrasound scan etc.)</h2>
-          <table id="OutpatientImagingTable" class="display">
+          <h2 class="page-title"> Outpatient Imaging (MRI/CT/Ultrasound scan etc.)</h2>
+          <div class="table-container">
+          <table id="OutpatientImagingTable" class="display  nowrap">
             <thead>
               <tr>
                 <th>Pet Name</th>
@@ -505,16 +618,18 @@
            </tr>
             </tbody>
           </table>
+          </div>
         </div>
       `;
-        }
+    }
 
-         // Neurology
-         function  Neurology() {
-            return `
+    // Neurology
+    function Neurology() {
+      return `
         <div>
-          <h2> Neurology</h2>
-          <table id="NeurologyTable" class="display">
+          <h2 class="page-title"> Neurology</h2>
+          <div class="table-container">
+          <table id="NeurologyTable" class="display  nowrap">
             <thead>
               <tr>
                 <th>Pet Name</th>
@@ -535,16 +650,18 @@
            </tr>
             </tbody>
           </table>
+          </div>
         </div>
       `;
-        }
+    }
 
-         // Surgery
-         function  Surgery() {
-            return `
+    // Surgery
+    function Surgery() {
+      return `
         <div>
-          <h2> Surgery</h2>
-          <table id="SurgeryTable" class="display">
+          <h2 class="page-title"> Surgery</h2>
+          <div class="table-container">
+          <table id="SurgeryTable" class="display  nowrap">
             <thead>
               <tr>
                 <th>Pet Name</th>
@@ -565,16 +682,18 @@
            </tr>
             </tbody>
           </table>
+          </div>
         </div>
       `;
-        }
+    }
 
-        // Veterinary Rehabilitation & Hydrotherapy
-         function VeterinaryRehabilitationHydrotherapy() {
-            return `
+    // Veterinary Rehabilitation & Hydrotherapy
+    function VeterinaryRehabilitationHydrotherapy() {
+      return `
         <div>
-          <h2>Veterinary Rehabilitation & Hydrotherapy</h2>
-          <table id="VeterinaryRehabilitationHydrotherapyTable" class="display">
+          <h2 class="page-title">Veterinary Rehabilitation & Hydrotherapy</h2>
+          <div class="table-container">
+          <table id="VeterinaryRehabilitationHydrotherapyTable" class="display  nowrap">
             <thead>
               <tr>
                 <th>Pet Name</th>
@@ -595,16 +714,18 @@
            </tr>
             </tbody>
           </table>
+          </div>
         </div>
       `;
-        }
+    }
 
-        // Request a Callback
-        function RequestaCallback() {
-  return `
+    // Request a Callback
+    function RequestaCallback() {
+      return `
     <div>
-      <h2>Request a Callback</h2>
-      <table id="RequestaCallbackTable" class="display">
+      <h2 class="page-title">Request a Callback</h2>
+      <div class="table-container">
+      <table id="RequestaCallbackTable" class="display  nowrap">
         <thead>
           <tr>
             <th>Your Name</th>
@@ -637,16 +758,18 @@
           </tr>
         </tbody>
       </table>
+      </div>
     </div>
   `;
-}
+    }
 
-        // Payment Deposit Enquiries
-         function PaymentDepositEnquiries() {
-  return `
+    // Payment Deposit Enquiries
+    function PaymentDepositEnquiries() {
+      return `
     <div>
-      <h2>Payment Deposit Enquiries</h2>
-      <table id="PaymentDepositEnquiriesTable" class="display">
+      <h2 class="page-title">Payment Deposit Enquiries</h2>
+      <div class="table-container">
+      <table id="PaymentDepositEnquiriesTable" class="display  nowrap">
         <thead>
           <tr>
             <th>Pet Name</th>
@@ -670,16 +793,18 @@
           </tr>
         </tbody>
       </table>
+      </div>
     </div>
   `;
-}
+    }
 
-        // Refund Enquiries
-        function RefundEnquiries() {
-     return `
+    // Refund Enquiries
+    function RefundEnquiries() {
+      return `
     <div>
-      <h2>Refund Enquiries</h2>
-      <table id="RefundEnquiriesTable" class="display">
+      <h2 class="page-title">Refund Enquiries</h2>
+      <div class="table-container">
+      <table id="RefundEnquiriesTable" class="display  nowrap">
         <thead>
           <tr>
             <th>Pet Name</th>
@@ -712,16 +837,18 @@
           </tr>
         </tbody>
       </table>
+      </div>
     </div>
   `;
-}
+    }
 
-        // Billing Enquiries
-        function BillingEnquiries() {
-    return `
+    // Billing Enquiries
+    function BillingEnquiries() {
+      return `
     <div>
-      <h2>Billing Enquiries</h2>
-      <table id="BillingEnquiriesTable" class="display">
+      <h2 class="page-title">Billing Enquiries</h2>
+      <div class="table-container">
+      <table id="BillingEnquiriesTable" class="display  nowrap">
         <thead>
           <tr>
             <th>Pet Name</th>
@@ -746,16 +873,18 @@
         </tbody>
       </table>
     </div>
+    </div>
   `;
-}
+    }
 
-        //users
-        function Users() {
+    //users
+    function Users() {
 
-       return `
+      return `
     <div>
-      <h1>Users</h1>
-      <table id="UsersTable" class="display">
+      <h1 class="page-title">Users</h1>
+      <div class="table-container">
+      <table id="UsersTable" class="display  nowrap">
         <thead>
           <tr>
             <th>Name</th>
@@ -788,42 +917,42 @@
       </table>
     </div>
   `;
-}
+    }
 
-        //Logout
-       function showLogoutPopup() {
-  
-  const overlay = document.createElement("div");
-  overlay.className = "logout-overlay";
+    //Logout
+    function showLogoutPopup() {
+      const overlay = document.createElement("div");
+      overlay.className = "logout-overlay";
 
- 
-  const popup = document.createElement("div");
-  popup.className = "logout-popup";
-  popup.innerHTML = `<p>Are you sure you want to log out?</p>`;
 
-  const yesBtn = document.createElement("button");
-  yesBtn.className = "btn-yes";
-  yesBtn.textContent = "Yes";
-  yesBtn.addEventListener("click", () => {
-   
-    document.body.removeChild(overlay);
-  });
+      const popup = document.createElement("div");
+      popup.className = "logout-popup";
+      popup.innerHTML = `<p>Are you sure you want to log out?</p>`;
 
-  const noBtn = document.createElement("button");
-  noBtn.className = "btn-no";
-  noBtn.textContent = "No";
-  noBtn.addEventListener("click", () => {
+      const yesBtn = document.createElement("button");
+      yesBtn.className = "btn-yes";
+      yesBtn.textContent = "Yes";
+      yesBtn.addEventListener("click", () => {
 
-    document.body.removeChild(overlay);
-  });
+        document.body.removeChild(overlay);
+      });
 
- 
-  popup.appendChild(yesBtn);
-  popup.appendChild(noBtn);
-  overlay.appendChild(popup);
-  document.body.appendChild(overlay);
-}
-   </script>
+      const noBtn = document.createElement("button");
+      noBtn.className = "btn-no";
+      noBtn.textContent = "No";
+      noBtn.addEventListener("click", () => {
+
+        document.body.removeChild(overlay);
+      });
+
+      popup.appendChild(yesBtn);
+      popup.appendChild(noBtn);
+      overlay.appendChild(popup);
+      document.body.appendChild(overlay);
+    }
+
+
+  </script>
 </body>
 
 </html>
